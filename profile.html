@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blog_Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f6f7fb;
+    }
+    header {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      padding: 20px 0;
+      color: white;
+      position: relative;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      margin: auto;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 600;
+      text-decoration: none;
+      color: white;
+    }
+    .nav-links a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .nav-links a.active {
+      opacity: 0.7;
+      pointer-events: none;
+      cursor: default;
+    }
+    .nav-links a:hover:not(.active) {
+      opacity: 0.8;
+    }
+    .profile-bar {
+      position: absolute;
+      top: 20px;
+      left: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.13);
+      padding: 8px 18px;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: 500;
+    }
+    .profile-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+    /* Button styles for all buttons */
+    button {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 8px 18px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: background 0.2s, opacity 0.2s;
+      box-shadow: 0 2px 8px rgba(102,126,234,0.09);
+    }
+    button:hover {
+      background: linear-gradient(90deg, #764ba2, #667eea);
+      opacity: 0.85;
+    }
+    /* Hide file input default label */
+    input[type="file"]::-webkit-file-upload-button {
+      visibility: hidden;
+    }
+    input[type="file"]::file-selector-button {
+      visibility: hidden;
+    }
+    input[type="file"] {
+      font-size: 0;
+    }
+    /* Custom file input label */
+    .custom-file-label {
+      display: none;
+      margin-bottom: 12px;
+      color: #fff;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      font-weight: 600;
+      font-size: 15px;
+      border-radius: 20px;
+      padding: 10px 22px;
+      box-shadow: 0 2px 8px rgba(102,126,234,0.09);
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      border: none;
+      text-align: center;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .custom-file-label.show-label {
+      display: block;
+    }
+    .custom-file-label:hover {
+      background: linear-gradient(90deg, #764ba2, #667eea);
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="profile-bar">
+      <img id="profileBarAvatar" class="profile-avatar" src="https://ui-avatars.com/api/?name=User" alt="Profile">
+      <a id="profileName" href="profile.html" style="color:#fff;text-decoration:underline;">User</a>
+    </div>
+    <div class="nav">
+      <a class="brand" href="home.html"> </a>
+      <nav class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="post.html">Posts</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="profile.html">Profile</a>
+        <a href="#" id="logoutBtn">Logout</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div style="max-width:500px;margin:60px auto;background:#fff;padding:32px 28px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.07);text-align:center;">
+      <h2 style="color:#667eea;">Profile</h2>
+      <div>
+        <div style="display:flex;justify-content:center;">
+          <img id="profileAvatar" class="profile-avatar" src="" alt="Profile" style="margin-bottom:18px;width:90px;height:90px;">
+        </div>
+        <button id="editBtn">Edit</button>
+        <label id="profilePhotoLabel" for="avatarInput" class="custom-file-label">Profile Photo</label>
+        <input type="file" id="avatarInput" accept="image/*" style="margin-bottom:12px;display:none;">
+        <button id="saveBtn" style="display:none;">Save</button>
+        <div style="font-size:18px;font-weight:600;margin-bottom:10px;" id="profileUser">User</div>
+        <div>
+          <label for="aboutInput" style="color:#667eea;font-weight:500;">About</label>
+          <textarea id="aboutInput" rows="3" style="width:100%;margin-top:6px;margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:15px;" disabled></textarea>
+        </div>
+        <div id="aboutDisplay" style="color:#444;margin-top:18px;"></div>
+      </div>
+    </div>
+  </main>
+  <script>
+    // Show logged in user name
+    const user = localStorage.getItem('loggedInUser');
+    if (user) {
+      document.getElementById('profileName').textContent = user;
+    }
+    const avatar = localStorage.getItem('profileAvatar');
+    const avatarBarImg = document.getElementById('profileBarAvatar');
+    if (avatar) {
+      avatarBarImg.src = avatar;
+    } else {
+      avatarBarImg.src = `https://ui-avatars.com/api/?name=${user || 'User'}`;
+    }
+
+    // Load about info from localStorage
+    const about = localStorage.getItem('profileAbout');
+    if (about) {
+      document.getElementById('aboutInput').value = about;
+      document.getElementById('aboutDisplay').textContent = about;
+    }
+
+    // Edit button logic
+    const editBtn = document.getElementById('editBtn');
+    const avatarInput = document.getElementById('avatarInput');
+    const saveBtn = document.getElementById('saveBtn');
+    const aboutInput = document.getElementById('aboutInput');
+    const profilePhotoLabel = document.getElementById('profilePhotoLabel');
+
+    editBtn.onclick = function() {
+      avatarInput.style.display = 'block';
+      saveBtn.style.display = 'inline-block';
+      aboutInput.disabled = false;
+      editBtn.style.display = 'none';
+      profilePhotoLabel.classList.add('show-label');
+    };
+
+    // Save button logic
+    saveBtn.onclick = function() {
+      // Save about info
+      const aboutText = aboutInput.value.trim();
+      localStorage.setItem('profileAbout', aboutText);
+      document.getElementById('aboutDisplay').textContent = aboutText;
+
+      // Save profile photo if changed
+      if (avatarInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          localStorage.setItem('profileAvatar', evt.target.result);
+          avatarImg.src = evt.target.result;
+          avatarBarImg.src = evt.target.result; // update top left avatar
+        };
+        reader.readAsDataURL(avatarInput.files[0]);
+      }
+
+      avatarInput.value = '';
+      avatarInput.style.display = 'none';
+      saveBtn.style.display = 'none';
+      aboutInput.disabled = true;
+      editBtn.style.display = 'inline-block';
+      profilePhotoLabel.classList.remove('show-label');
+    };
+  </script>
+  <script>
+  document.getElementById("logoutBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "first_page.html";
+  });
+</script>
+
+</body>
+</html>

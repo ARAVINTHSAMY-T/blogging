@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog_Website</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f9f9fb;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: linear-gradient(90deg, #d6a9e3, #dec6f0);
+      padding: 20px 0;
+      color: white;
+    }
+    .profile-bar {
+      position: absolute;
+      top: 20px;
+      left: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.13);
+      padding: 8px 18px;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: 500;
+    }
+    .profile-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      margin: auto;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 600;
+      text-decoration: none;
+      color: white;
+    }
+    .nav-links a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .nav-links a:hover {
+      opacity: 0.8;
+    }
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 90%;
+      margin: 50px auto;
+      gap: 40px;
+    }
+    .hero-content {
+      max-width: 500px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      margin-bottom: 15px;
+      color: #222;
+    }
+    .hero p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+    .btn {
+      padding: 12px 20px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      opacity: 0.9;
+    }
+    .qwerty{
+      background:#ea9d66;
+      padding: 12px 20px 12px 20px;
+    border-radius: 8px;  
+    }
+    main {
+      flex: 1;
+    }
+    footer {
+      background: #222;
+      color: #bbb;
+      text-align: center;
+      padding: 20px;
+      margin-top: 50px;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <div class="profile-bar">
+      <img id="profileBarAvatar" class="profile-avatar" src="https://ui-avatars.com/api/?name=User" alt="Profile">
+      <a id="profileName" href="profile.html" style="color:#fff;text-decoration:underline;">User</a>
+    </div>
+    <div class="nav">
+      <a class="brand" href="home.html"> </a>
+      <nav class="nav-links">
+        <a href="home.html" class="active">Home</a>
+        <a href="post.html">Posts</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="profile.html">Profile</a>
+        <a href="#" id="logoutBtn">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <span class="kicker">✨ Featured Story</span>
+        <h1>Welcome to Blogging World</h1>
+        <p>Welcome to Blog Website, a beautifully crafted platform to share stories, ideas, and insights. Explore our curated posts and start your journey.</p>
+        <a class="btn" href="post.html">Read Featured Post</a>
+
+      </div>
+      <div class="hero-image">
+        <img src="https://picsum.photos/600/400?random=1" alt="Featured post" style="border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1);">
+      </div>
+    </section>
+
+    <!-- Recent Blogs Section -->
+    <section style="width:90%;margin:40px auto;">
+      <h2 style="color:#667eea;font-size:28px;font-weight:600;margin-bottom:24px;">Recent Blogs</h2>
+      <div id="recentBlogs" style="display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:32px;min-height:500px;">
+        <!-- Blog cards will be rendered here -->
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025  Blog • Crafted by developers</p>
+  </footer>
+
+  <script>
+    // Show logged in user name in profile bar as a link
+    const user = localStorage.getItem('loggedInUser') || 'User';
+    document.getElementById('profileName').textContent = user;
+
+    // Show profile photo in profile bar
+    const avatar = localStorage.getItem('profileAvatar');
+    const avatarImg = document.getElementById('profileBarAvatar');
+    if (avatar) {
+      avatarImg.src = avatar;
+    } else {
+      avatarImg.src = `https://ui-avatars.com/api/?name=${user}`;
+    }
+
+    // Combine default and user blogs
+    const defaultBlogs = [
+      { title: "Football World Cup", category: "sports", content: "Latest updates on the Football World Cup.", image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80" },
+      { title: "Study Tips for Exams", category: "education", content: "Effective strategies to ace your exams.", image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=400&q=80" },
+      { title: "Breaking News: Tech", category: "news", content: "New tech innovations announced today.", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80" },
+      { title: "Top 10 Novels", category: "books", content: "A list of must-read novels for book lovers.", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80" },
+      { title: "Olympics Highlights", category: "sports", content: "Best moments from the Olympics.", image: "https://tse1.mm.bing.net/th/id/OIP.fng3ZpZpwuQ9whx3qZftKwHaEe?pid=Api&P=0&h=180" },
+      { title: "Education Reforms", category: "education", content: "Recent changes in the education system.", image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" }
+    ];
+    const userBlogs = JSON.parse(localStorage.getItem('blogs_custom')) || [];
+    const blogs = [...userBlogs.reverse(), ...defaultBlogs].slice(0, 9); // Show most recent 6 blogs
+    
+
+    // Render recent blogs in grid
+    function renderRecentBlogs() {
+      const recentBlogs = document.getElementById('recentBlogs');
+      recentBlogs.innerHTML = '';
+      blogs.forEach(blog => {
+        recentBlogs.innerHTML += `
+          <div style="background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.07);padding:18px 16px;display:flex;flex-direction:column;align-items:flex-start;">
+            <img src="${blog.image}" alt="${blog.title}" style="width:100%;max-width:220px;border-radius:10px;margin-bottom:12px;box-shadow:0 2px 8px rgba(102,126,234,0.09);object-fit:cover;">
+            <div style="font-size:18px;font-weight:600;color:#667eea;margin-bottom:6px;">${blog.title}</div>
+            <div style="font-size:13px;color:#764ba2;margin-bottom:10px;font-weight:500;">${blog.category.charAt(0).toUpperCase() + blog.category.slice(1)}</div>
+            <div style="font-size:15px;color:#444;margin-bottom:10px;">${blog.content}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:auto;">
+              <img src="${avatarImg.src}" alt="User" style="width:24px;height:24px;border-radius:50%;object-fit:cover;border:1.5px solid #667eea;background:#eee;">
+              <span style="font-size:14px;font-weight:500;color:#667eea;">${user}</span>
+            </div>`
+        
+      });
+      // Fill empty cells if less than 6 blogs
+      for (let i = blogs.length; i < 12; i++) {
+        recentBlogs.innerHTML += `<div></div>`;
+      }
+    }
+    
+    renderRecentBlogs();
+  </script>
+  <script>
+  document.getElementById("logoutBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "first_page.html";
+  });
+</script>
+<div id="blogList"></div>
+
+<script>
+function loadBlogs() {
+  fetch("http://localhost:5000/api/blogs")
+    .then(res => res.json())
+    .then(blogs => {
+      const blogList = document.getElementById("blogList");
+      blogList.innerHTML = "";
+      blogs.forEach(blog => {
+        blogList.innerHTML += `
+          <div class="blog-card">
+            <h3>${blog.title}</h3>
+            <p><b>${blog.category}</b></p>
+            <p>${blog.content}</p>
+            ${blog.image ? `<img src="${blog.image}" width="200">` : ""}
+          </div>
+        `;
+      });
+    });
+}
+loadBlogs();
+</script>
+
+</body>
+</html>

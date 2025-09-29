@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About | Blog_Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f6f7fb;
+    }
+    header {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      padding: 20px 0;
+      color: white;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      margin: auto;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 600;
+      text-decoration: none;
+      color: white;
+    }
+    .nav-links a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .nav-links a.active {
+      opacity: 0.7;
+      pointer-events: none;
+      cursor: default;
+    }
+    .nav-links a:hover:not(.active) {
+      opacity: 0.8;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 36px 32px;
+    }
+    h2 {
+      text-align: center;
+      color: #764ba2;
+      margin-bottom: 18px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .about-section {
+      font-size: 17px;
+      color: #444;
+      line-height: 1.7;
+    }
+    .about-section ul {
+      margin: 12px 0 18px 18px;
+      padding: 0;
+    }
+    .about-section li {
+      margin-bottom: 8px;
+    }
+    .about-highlight {
+      color: #667eea;
+      font-weight: 600;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+    .about-emoji {
+      font-size: 22px;
+      margin-right: 6px;
+    }
+    .about-contact {
+      margin-top: 24px;
+      font-size: 16px;
+      color: #764ba2;
+      text-align: center;
+    }
+    .about-contact a {
+      color: #667eea;
+      text-decoration: underline;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .about-contact a:hover {
+      color: #764ba2;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a class="brand" href="home.html">Blog_Website</a>
+      <nav class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="post.html">Posts</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="profile.html">Profile</a>
+        <a href="#" id="logoutBtn">Logout</a>
+      </nav>
+    </div>
+  </header>
+  <div class="container">
+    <h2>✨ About Me</h2>
+    <div class="about-section">
+      <p>Hi, I’m <b>Full stack developer</b> 👋</p>
+      <p>I’m a 3rd-year ECE student who loves exploring technology, coding, and creative projects. This blog is my little corner of the internet where I share what I learn, build, and experience along the way.</p>
+      <div class="about-highlight">🌱 Why I Started This Blog</div>
+      <ul>
+        <li>Break down complex tech topics into simple ideas.</li>
+        <li>Share my journey in embedded systems, AI, and projects.</li>
+        <li>Inspire other students and beginners to start creating.</li>
+      </ul>
+      <div class="about-highlight">🚀 What You’ll Find Here</div>
+      <ul>
+        <li>Technology & Projects – coding, AI, embedded systems.</li>
+        <li>Personal Growth – productivity tips, student life.</li>
+        <li>Creative Explorations – blogging, hobbies, and more.</li>
+      </ul>
+      <div class="about-highlight">💡 My Mission</div>
+      <p>To create a space where curiosity meets knowledge. If you’re passionate about learning, experimenting, and growing, you’ll feel right at home here.</p>
+      <div class="about-highlight">🌸 A Little About Me</div>
+      <ul>
+        <li>📚 Currently working on projects like driver drowsiness detection and stadium seat booking systems.</li>
+        <li>🏋️‍♀️ I go to the gym in the evenings to recharge my energy.</li>
+        <li>🖋️ I love writing, exploring ideas, and building cool projects.</li>
+        <li>🎯 Fun fact: I enjoy turning simple ideas into creative tech experiments.</li>
+      </ul>
+      <div class="about-contact">
+        <div>🤝 Let’s Connect</div>
+        <div>💌 Contact me via the <a href="contact.html">Contact Page</a>.</div>
+        <div>📢 Follow my journey on social media (add your links here).</div>
+        <div>🔔 Don’t forget to see the blog never.</div>
+      </div>
+    </div>
+  </div>
+  <script>
+  document.getElementById("logoutBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "first_page.html";
+  });
+</script>
+
+</body>
+</html>

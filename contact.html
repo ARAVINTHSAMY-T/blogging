@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact | Blog_Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f6f7fb;
+    }
+    header {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      padding: 20px 0;
+      color: white;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      margin: auto;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 600;
+      text-decoration: none;
+      color: white;
+    }
+    .nav-links a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .nav-links a.active {
+      opacity: 0.7;
+      pointer-events: none;
+      cursor: default;
+    }
+    .nav-links a:hover:not(.active) {
+      opacity: 0.8;
+    }
+    .contact-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      width: 100%;
+      max-width: 500px;
+      margin: 50px auto;
+    }
+    .contact-container h2 {
+      text-align: center;
+      color: #764ba2;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    .contact-container p {
+      text-align: center;
+      color: #555;
+      margin-bottom: 25px;
+      font-size: 16px;
+    }
+    .contact-container input,
+    .contact-container textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      background: #f6f7fb;
+      transition: border-color 0.3s;
+    }
+    .contact-container input:focus,
+    .contact-container textarea:focus {
+      border-color: #764ba2;
+    }
+    .contact-container button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(102,126,234,0.09);
+      transition: background 0.2s, opacity 0.2s;
+    }
+    .contact-container button:hover {
+      background: linear-gradient(90deg, #764ba2, #667eea);
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a class="brand" href="home.html"> </a>
+      <nav class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="post.html">Posts</a>
+        <a href="about.html">About</a>
+        <a href="contact.html" class="active">Contact</a>
+        <a href="profile.html">Profile</a>
+        <a href="#" id="logoutBtn">Logout</a>
+
+      </nav>
+    </div>
+  </header>
+  <div class="contact-container">
+    <h2>Contact Me</h2>
+    <p>Have a question or just want to say hi? I’d love to hear from you.</p>
+    <form action="mailto:youremail@example.com" method="post" enctype="text/plain">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+  <script>
+  document.getElementById("logoutBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "first_page.html";
+  });
+</script>
+
+</body>
+</html>
