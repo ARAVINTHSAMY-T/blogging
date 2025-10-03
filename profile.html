@@ -265,7 +265,17 @@
       </div>
     </div>
   </main>
-  <script>
+  <script src="./ui-profile.js"></script>
+  <script type="module">
+    import { watchAuth, logout } from './auth.js';
+    import { createOrUpdateUser } from './db.js';
+
+    let currentEmail = null;
+    watchAuth(userObj => {
+      if (userObj) {
+        currentEmail = (userObj.email || '').toLowerCase();
+      }
+    });
     // Show logged in user name and avatar
     const user = localStorage.getItem('loggedInUser');
     const customName = localStorage.getItem('customName');
@@ -325,25 +335,27 @@
     };
 
     // Save button logic
-    saveBtn.onclick = function() {
-      // Save custom name
+    saveBtn.onclick = async function() {
+      // Save custom name only if provided; otherwise keep previous
+      const previousName = localStorage.getItem('customName') || user || 'User';
       const customNameText = customNameInput.value.trim();
+      const finalName = customNameText || previousName;
       if (customNameText) {
         localStorage.setItem('customName', customNameText);
-        profileName.textContent = customNameText;
-        profileUser.textContent = customNameText;
-      } else {
-        localStorage.removeItem('customName');
-        profileName.textContent = user || 'User';
-        profileUser.textContent = user || 'User';
       }
+      profileName.textContent = finalName;
+      profileUser.textContent = finalName;
 
-      // Save about info
+      // Save about info only if provided; otherwise keep previous
+      const previousAbout = localStorage.getItem('profileAbout') || '';
       const aboutText = aboutInput.value.trim();
-      localStorage.setItem('profileAbout', aboutText);
-      document.getElementById('aboutDisplay').textContent = aboutText;
+      const finalAbout = aboutText || previousAbout;
+      if (aboutText) {
+        localStorage.setItem('profileAbout', aboutText);
+      }
+      document.getElementById('aboutDisplay').textContent = finalAbout;
 
-      // Save profile photo if changed
+      // Save profile photo only if changed
       if (avatarInput.files[0]) {
         const reader = new FileReader();
         reader.onload = function(evt) {
@@ -353,13 +365,18 @@
         };
         reader.readAsDataURL(avatarInput.files[0]);
       }
+      // If no new photo selected, keep existing avatar unchanged
 
-      // Update avatar URL if no photo is uploaded
-      if (!avatarInput.files[0]) {
-        const avatarName = customNameText || user || 'User';
-        avatarImg.src = `https://ui-avatars.com/api/?name=${avatarName}`;
-        avatarBarImg.src = `https://ui-avatars.com/api/?name=${avatarName}`;
-      }
+      // Persist to Firestore (users/{email}) if signed in
+      try {
+        if (currentEmail) {
+          await createOrUpdateUser(currentEmail, {
+            displayName: localStorage.getItem('customName') || finalName,
+            photoURL: localStorage.getItem('profileAvatar') || '',
+            about: localStorage.getItem('profileAbout') || finalAbout
+          });
+        }
+      } catch (_) {}
 
       avatarInput.value = '';
       avatarInput.style.display = 'none';
@@ -373,6 +390,7 @@
     // Logout button logic
     document.getElementById("logoutBtn").addEventListener("click", function(e) {
       e.preventDefault();
+      (async () => { try { await logout(); } catch (_) {} })();
       localStorage.removeItem("loggedInUser");
       localStorage.removeItem("customName");
       localStorage.removeItem("profileAvatar");

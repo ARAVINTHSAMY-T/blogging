@@ -241,10 +241,16 @@
     <div style="margin-left: 20px;">
       <a href="add_blog.html" style="background:#764ba2;color:#fff;padding:10px 22px;border-radius:20px;text-decoration:none;font-weight:600;box-shadow:0 2px 8px rgba(102,126,234,0.09);transition:background 0.2s;">+ Add Blog</a>
     </div>
+    
+  </div>
+  <div class="container">
+    <h3>All Blogs</h3>
+    <div id="allBlogs" class="grid"></div>
   </div>
   <div class="blog-list" id="blogList"></div>
   <script type="module" src="./firebase-init.js"></script>
   <script type="module" src="./db.js"></script>
+  <script src="./ui-profile.js"></script>
   <script type="module">
     import { getRecentPosts, incrementPostLike } from './db.js';
     async function renderBlogs(category) {
@@ -399,10 +405,7 @@
 <script>
 // Legacy local API section removed; Firestore used above
 </script>
-<div class="container">
-  <h2>All Blog Posts</h2>
-  <div id="allBlogs" class="grid"></div>
-</div>
+
 
 <script>
   // Optional: Could load all via Firestore; using the top list already
