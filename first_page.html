@@ -107,6 +107,8 @@
     </div>
   </div>
 
+  <script type="module" src="./firebase-init.js"></script>
+  <script type="module" src="./auth.js"></script>
   <script>
     // Toggle Forms
     function showLogin() {
@@ -165,6 +167,20 @@
       });
 
       this.reset();
+    });
+  </script>
+  <div style="margin-top:16px;text-align:center;">
+    <button id="googleBtn" style="background:#ea4335;">Continue with Google</button>
+  </div>
+  <script type="module">
+    import { signInWithGoogle } from './auth.js';
+    document.getElementById('googleBtn').addEventListener('click', async () => {
+      try {
+        await signInWithGoogle();
+        window.location.href = 'home.html';
+      } catch (e) {
+        alert('Google sign-in failed: ' + e.message);
+      }
     });
   </script>
 </body>

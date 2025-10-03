@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Blog</title>
+  <style>
+    body { font-family: 'Poppins', sans-serif; margin: 0; background: #f6f7fb; }
+    .container { max-width: 720px; margin: 40px auto; background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; margin: 8px 0 16px; font-size: 14px; }
+    button { background: linear-gradient(90deg, #667eea, #764ba2); border: 0; color: #fff; padding: 12px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    a { color: #667eea; text-decoration: none; }
+  </style>
+  <script type="module" src="./firebase-init.js"></script>
+  <script type="module" src="./auth.js"></script>
+  <script type="module" src="./db.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Add Blog Post</h2>
+    <form id="addForm">
+      <input type="text" id="title" placeholder="Title" required>
+      <select id="category" required>
+        <option value="">Choose category</option>
+        <option value="sports">Sports</option>
+        <option value="education">Education</option>
+        <option value="news">News</option>
+        <option value="books">Books</option>
+      </select>
+      <textarea id="content" rows="6" placeholder="Write your content..." required></textarea>
+      <input type="url" id="image" placeholder="Image URL (optional)">
+      <button type="submit">Publish</button>
+      <a href="post.html" style="margin-left:12px;">Back to Posts</a>
+    </form>
+    <div id="msg"></div>
+  </div>
+
+  <script type="module">
+    import { watchAuth } from './auth.js';
+    import { addPost } from './db.js';
+
+    let currentEmail = null;
+    watchAuth(user => {
+      if (!user) {
+        window.location.href = 'first_page.html';
+      } else {
+        currentEmail = (user.email || '').toLowerCase();
+      }
+    });
+
+    document.getElementById('addForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentEmail) return alert('Please sign in.');
+      const title = document.getElementById('title').value.trim();
+      const category = document.getElementById('category').value;
+      const content = document.getElementById('content').value.trim();
+      const image = document.getElementById('image').value.trim();
+      try {
+        const id = await addPost({ title, category, content, image, authorEmail: currentEmail });
+        document.getElementById('msg').textContent = 'Published!';
+        setTimeout(() => { window.location.href = 'post.html'; }, 600);
+      } catch (e) {
+        alert('Failed to publish: ' + e.message);
+      }
+    });
+  </script>
+</body>
+</html>
+
+

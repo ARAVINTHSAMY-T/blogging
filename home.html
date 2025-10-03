@@ -164,6 +164,9 @@
     <p>© 2025  Blog • Crafted by developers</p>
   </footer>
 
+  <script type="module" src="./firebase-init.js"></script>
+  <script type="module" src="./auth.js"></script>
+  <script type="module" src="./db.js"></script>
   <script>
     // Show logged in user name in profile bar as a link
     const user = localStorage.getItem('loggedInUser') || 'User';
@@ -179,72 +182,52 @@
     }
 
     // Combine default and user blogs
-    const defaultBlogs = [
-      { title: "Football World Cup", category: "sports", content: "Latest updates on the Football World Cup.", image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80" },
-      { title: "Study Tips for Exams", category: "education", content: "Effective strategies to ace your exams.", image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=400&q=80" },
-      { title: "Breaking News: Tech", category: "news", content: "New tech innovations announced today.", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80" },
-      { title: "Top 10 Novels", category: "books", content: "A list of must-read novels for book lovers.", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80" },
-      { title: "Olympics Highlights", category: "sports", content: "Best moments from the Olympics.", image: "https://tse1.mm.bing.net/th/id/OIP.fng3ZpZpwuQ9whx3qZftKwHaEe?pid=Api&P=0&h=180" },
-      { title: "Education Reforms", category: "education", content: "Recent changes in the education system.", image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" }
-    ];
-    const userBlogs = JSON.parse(localStorage.getItem('blogs_custom')) || [];
-    const blogs = [...userBlogs.reverse(), ...defaultBlogs].slice(0, 9); // Show most recent 6 blogs
-    
-
-    // Render recent blogs in grid
-    function renderRecentBlogs() {
+    async function renderRecentBlogs() {
       const recentBlogs = document.getElementById('recentBlogs');
       recentBlogs.innerHTML = '';
-      blogs.forEach(blog => {
-        recentBlogs.innerHTML += `
-          <div style="background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.07);padding:18px 16px;display:flex;flex-direction:column;align-items:flex-start;">
-            <img src="${blog.image}" alt="${blog.title}" style="width:100%;max-width:220px;border-radius:10px;margin-bottom:12px;box-shadow:0 2px 8px rgba(102,126,234,0.09);object-fit:cover;">
-            <div style="font-size:18px;font-weight:600;color:#667eea;margin-bottom:6px;">${blog.title}</div>
-            <div style="font-size:13px;color:#764ba2;margin-bottom:10px;font-weight:500;">${blog.category.charAt(0).toUpperCase() + blog.category.slice(1)}</div>
-            <div style="font-size:15px;color:#444;margin-bottom:10px;">${blog.content}</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-top:auto;">
-              <img src="${avatarImg.src}" alt="User" style="width:24px;height:24px;border-radius:50%;object-fit:cover;border:1.5px solid #667eea;background:#eee;">
-              <span style="font-size:14px;font-weight:500;color:#667eea;">${user}</span>
-            </div>`
-        
-      });
-      // Fill empty cells if less than 6 blogs
-      for (let i = blogs.length; i < 12; i++) {
-        recentBlogs.innerHTML += `<div></div>`;
+      try {
+        const module = await import('./db.js');
+        const posts = await module.getRecentPosts(12);
+        posts.forEach(blog => {
+          recentBlogs.innerHTML += `
+            <div style="background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.07);padding:18px 16px;display:flex;flex-direction:column;align-items:flex-start;">
+              <img src="${blog.image || 'https://picsum.photos/220/140'}" alt="${blog.title}" style="width:100%;max-width:220px;border-radius:10px;margin-bottom:12px;box-shadow:0 2px 8px rgba(102,126,234,0.09);object-fit:cover;">
+              <div style="font-size:18px;font-weight:600;color:#667eea;margin-bottom:6px;">${blog.title}</div>
+              <div style="font-size:13px;color:#764ba2;margin-bottom:10px;font-weight:500;">${(blog.category || '').toString().charAt(0).toUpperCase() + (blog.category || '').toString().slice(1)}</div>
+              <div style="font-size:15px;color:#444;margin-bottom:10px;">${blog.content || ''}</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:auto;">
+                <img src="${avatarImg.src}" alt="User" style="width:24px;height:24px;border-radius:50%;object-fit:cover;border:1.5px solid #667eea;background:#eee;">
+                <span style="font-size:14px;font-weight:500;color:#667eea;">${user}</span>
+              </div>`
+        });
+        for (let i = posts.length; i < 12; i++) {
+          recentBlogs.innerHTML += `<div></div>`;
+        }
+      } catch (e) {
+        recentBlogs.innerHTML = '<p>Failed to load posts.</p>';
+        console.error(e);
       }
     }
-    
+
     renderRecentBlogs();
   </script>
   <script>
   document.getElementById("logoutBtn").addEventListener("click", function(e) {
     e.preventDefault();
-    localStorage.removeItem("loggedInUser");
-    window.location.href = "first_page.html";
+    (async () => {
+      try {
+        const module = await import('./auth.js');
+        await module.logout();
+      } catch (_) {}
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "first_page.html";
+    })();
   });
 </script>
 <div id="blogList"></div>
 
 <script>
-function loadBlogs() {
-  fetch("http://localhost:5000/api/blogs")
-    .then(res => res.json())
-    .then(blogs => {
-      const blogList = document.getElementById("blogList");
-      blogList.innerHTML = "";
-      blogs.forEach(blog => {
-        blogList.innerHTML += `
-          <div class="blog-card">
-            <h3>${blog.title}</h3>
-            <p><b>${blog.category}</b></p>
-            <p>${blog.content}</p>
-            ${blog.image ? `<img src="${blog.image}" width="200">` : ""}
-          </div>
-        `;
-      });
-    });
-}
-loadBlogs();
+// Legacy local API block removed in favor of Firestore
 </script>
 
 </body>

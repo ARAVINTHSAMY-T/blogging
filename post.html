@@ -242,27 +242,16 @@
       <a href="add_blog.html" style="background:#764ba2;color:#fff;padding:10px 22px;border-radius:20px;text-decoration:none;font-weight:600;box-shadow:0 2px 8px rgba(102,126,234,0.09);transition:background 0.2s;">+ Add Blog</a>
     </div>
   </div>
-  <div class="blog-list" id="blogList">
-    <!-- Blogs will be rendered here -->
-  </div>
-  <script>
-    // Example blog data
-    const blogs = [
-      { title: "Football World Cup", category: "sports", content: "Latest updates on the Football World Cup.", image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80" },
-      { title: "Study Tips for Exams", category: "education", content: "Effective strategies to ace your exams.", image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=400&q=80" },
-      { title: "Breaking News: Tech", category: "news", content: "New tech innovations announced today.", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80" },
-      { title: "Top 10 Novels", category: "books", content: "A list of must-read novels for book lovers.", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80" },
-      { title: "Olympics Highlights", category: "sports", content: "Best moments from the Olympics.", image: "https://images.unsplash.com/photo-1505843277359-0c7f01c5c7c7?auto=format&fit=crop&w=400&q=80" },
-      { title: "Education Reforms", category: "education", content: "Recent changes in the education system.", image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" },
-      { title: "Global News Roundup", category: "news", content: "Summary of today's global news.", image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" },
-      { title: "Book Review: The Alchemist", category: "books", content: "A review of Paulo Coelho's classic.", image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=400&q=80" }
-    ];
-
-    // Render blogs by category
-    function renderBlogs(category) {
+  <div class="blog-list" id="blogList"></div>
+  <script type="module" src="./firebase-init.js"></script>
+  <script type="module" src="./db.js"></script>
+  <script type="module">
+    import { getRecentPosts, incrementPostLike } from './db.js';
+    async function renderBlogs(category) {
       const blogList = document.getElementById('blogList');
       blogList.innerHTML = '';
-      const filtered = category ? blogs.filter(b => b.category === category) : blogs;
+      const posts = await getRecentPosts(30);
+      const filtered = category ? posts.filter(b => b.category === category) : posts;
       // Get user info for blog cards
       const user = localStorage.getItem('loggedInUser') || 'User';
       const avatar = localStorage.getItem('profileAvatar') || `https://ui-avatars.com/api/?name=${user}`;
@@ -272,9 +261,9 @@
       }
       filtered.forEach((blog, idx) => {
         // Likes/comments state
-        const likeCount = JSON.parse(localStorage.getItem('blog_like_' + blog.title)) || 0;
-        const liked = localStorage.getItem('blog_liked_' + blog.title) === 'true';
-        const comments = JSON.parse(localStorage.getItem('blog_comments_' + blog.title)) || [];
+        const likeCount = blog.likes || 0;
+        const liked = false;
+        const comments = [];
         blogList.innerHTML += `
           <div class="blog-card" data-idx="${idx}" style="cursor:pointer;">
             <img class="blog-image" src="${blog.image}" alt="${blog.title}">
@@ -283,7 +272,7 @@
               <div class="blog-category">${blog.category.charAt(0).toUpperCase() + blog.category.slice(1)}</div>
               <div class="blog-content">${blog.content}</div>
               <div class="blog-actions">
-                <button class="like-btn${liked ? ' liked' : ''}" data-title="${blog.title}">
+                <button class="like-btn${liked ? ' liked' : ''}" data-id="${blog.id}">
                   <span>❤️</span> <span class="like-count">${likeCount}</span> Like
                 </button>
                 <button class="comment-btn" data-title="${blog.title}">
@@ -320,19 +309,10 @@
 
         // Like button logic
         document.querySelectorAll('.like-btn').forEach(btn => {
-          btn.onclick = function(e) {
+          btn.onclick = async function(e) {
             e.stopPropagation();
-            const title = this.getAttribute('data-title');
-            let count = JSON.parse(localStorage.getItem('blog_like_' + title)) || 0;
-            let liked = localStorage.getItem('blog_liked_' + title) === 'true';
-            if (!liked) {
-              count++;
-              localStorage.setItem('blog_liked_' + title, 'true');
-            } else {
-              count = Math.max(0, count - 1);
-              localStorage.setItem('blog_liked_' + title, 'false');
-            }
-            localStorage.setItem('blog_like_' + title, JSON.stringify(count));
+            const id = this.getAttribute('data-id');
+            await incrementPostLike(id, 1);
             renderBlogs(category);
           };
         });
@@ -367,7 +347,6 @@
       }, 0);
     }
 
-    // Show all blogs initially
     renderBlogs();
 
     // Show dropdown on search bar focus/click
@@ -396,49 +375,29 @@
         renderBlogs(category);
       });
     });
-
-    // Show logged in user name in profile bar as a link
+    // Profile bar stays as-is using localStorage values set during auth
     const user = localStorage.getItem('loggedInUser');
-    if (user) {
-      document.getElementById('profileName').textContent = user;
-    }
+    if (user) { document.getElementById('profileName').textContent = user; }
     const avatar = localStorage.getItem('profileAvatar');
     const avatarBarImg = document.getElementById('profileBarAvatar');
-    if (avatar) {
-      avatarBarImg.src = avatar;
-    } else {
-      avatarBarImg.src = `https://ui-avatars.com/api/?name=${user || 'User'}`;
-    }
+    avatarBarImg.src = avatar || `https://ui-avatars.com/api/?name=${user || 'User'}`;
   </script>
   <script>
   document.getElementById("logoutBtn").addEventListener("click", function(e) {
     e.preventDefault();
-    localStorage.removeItem("loggedInUser");
-    window.location.href = "first_page.html";
+    (async () => {
+      try {
+        const module = await import('./auth.js');
+        await module.logout();
+      } catch (_) {}
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "first_page.html";
+    })();
   });
 </script>
 <div id="blogList"></div>
-
 <script>
-function loadBlogs() {
-  fetch("http://localhost:5000/api/blogs")
-    .then(res => res.json())
-    .then(blogs => {
-      const blogList = document.getElementById("blogList");
-      blogList.innerHTML = "";
-      blogs.forEach(blog => {
-        blogList.innerHTML += `
-          <div class="blog-card">
-            <h3>${blog.title}</h3>
-            <p><b>${blog.category}</b></p>
-            <p>${blog.content}</p>
-            ${blog.image ? `<img src="${blog.image}" width="200">` : ""}
-          </div>
-        `;
-      });
-    });
-}
-loadBlogs();
+// Legacy local API section removed; Firestore used above
 </script>
 <div class="container">
   <h2>All Blog Posts</h2>
@@ -446,28 +405,7 @@ loadBlogs();
 </div>
 
 <script>
-  function loadAllBlogs() {
-    fetch("http://localhost:5000/api/blogs")
-      .then(res => res.json())
-      .then(blogs => {
-        const blogList = document.getElementById("allBlogs");
-        blogList.innerHTML = "";
-        blogs.forEach(blog => {
-          blogList.innerHTML += `
-            <div class="blog-card">
-              <h3>${blog.title}</h3>
-              <p><b>${blog.category}</b></p>
-              <p>${blog.content.substring(0, 150)}...</p>
-              ${blog.image ? `<img src="${blog.image}">` : ""}
-              <p><small>${new Date(blog.createdAt).toLocaleDateString()}</small></p>
-            </div>
-          `;
-        });
-      })
-      .catch(err => console.error("Error loading blogs:", err));
-  }
-
-  loadAllBlogs();
+  // Optional: Could load all via Firestore; using the top list already
 </script>
 
 </body>
