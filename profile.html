@@ -2,16 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Blog_Website</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog_website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       background: #f6f7fb;
+      color: #444;
+      overflow-x: hidden;
     }
     header {
-      background: linear-gradient(90deg, #667eea, #764ba2);
+      background: linear-gradient(90deg, #d6a9e3, #dec6f0);
       padding: 20px 0;
       color: white;
       position: relative;
@@ -51,7 +59,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(255,255,255,0.13);
+      background: rgba(255, 255, 255, 0.13);
       padding: 8px 18px;
       border-radius: 20px;
       color: #fff;
@@ -74,12 +82,13 @@
       font-weight: 600;
       cursor: pointer;
       margin-bottom: 12px;
-      transition: background 0.2s, opacity 0.2s;
-      box-shadow: 0 2px 8px rgba(102,126,234,0.09);
+      transition: background 0.2s, opacity 0.2s, transform 0.2s;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.09);
     }
     button:hover {
       background: linear-gradient(90deg, #764ba2, #667eea);
       opacity: 0.85;
+      transform: translateY(-2px);
     }
     /* Hide file input default label */
     input[type="file"]::-webkit-file-upload-button {
@@ -99,11 +108,11 @@
       background: linear-gradient(90deg, #667eea, #764ba2);
       font-weight: 600;
       font-size: 15px;
-      border-radius: 20px;
+      border-radius: 8px;
       padding: 10px 22px;
-      box-shadow: 0 2px 8px rgba(102,126,234,0.09);
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.09);
       cursor: pointer;
-      transition: background 0.2s, opacity 0.2s;
+      transition: background 0.2s, opacity 0.2s, transform 0.2s;
       border: none;
       text-align: center;
       width: fit-content;
@@ -116,6 +125,101 @@
     .custom-file-label:hover {
       background: linear-gradient(90deg, #764ba2, #667eea);
       opacity: 0.85;
+      transform: translateY(-2px);
+    }
+    /* Profile container */
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+    }
+    .profile-container {
+      background: #fff;
+      padding: 32px 28px;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+    h2 {
+      color: #667eea;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 18px;
+    }
+    #profileAvatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #667eea;
+      margin-bottom: 18px;
+    }
+    #customNameInput {
+      width: 100%;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+      background: #f9f9f9;
+      color: #444;
+    }
+    #customNameInput::placeholder {
+      color: #888;
+    }
+    #customNameInput:disabled {
+      background: #f6f7fb;
+    }
+    #aboutInput {
+      width: 100%;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+      background: #f9f9f9;
+      color: #444;
+      resize: vertical;
+    }
+    #aboutInput::placeholder {
+      color: #888;
+    }
+    #aboutInput:disabled {
+      background: #f6f7fb;
+    }
+    #aboutDisplay {
+      color: #444;
+      margin-top: 18px;
+      font-size: 15px;
+    }
+    label[for="aboutInput"], label[for="customNameInput"] {
+      color: #667eea;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 8px;
+    }
+    #profileUser {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #444;
+    }
+    @media (max-width: 480px) {
+      .profile-container {
+        width: 90%;
+        padding: 20px;
+      }
+      h2 {
+        font-size: 24px;
+      }
+      button, .custom-file-label {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -132,43 +236,69 @@
         <a href="post.html">Posts</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
-        <a href="profile.html">Profile</a>
+        <a href="profile.html" class="active">Profile</a>
         <a href="#" id="logoutBtn">Logout</a>
       </nav>
     </div>
   </header>
   <main>
-    <div style="max-width:500px;margin:60px auto;background:#fff;padding:32px 28px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.07);text-align:center;">
-      <h2 style="color:#667eea;">Profile</h2>
+    <div class="profile-container">
+      <h2>Profile</h2>
       <div>
         <div style="display:flex;justify-content:center;">
-          <img id="profileAvatar" class="profile-avatar" src="" alt="Profile" style="margin-bottom:18px;width:90px;height:90px;">
+          <img id="profileAvatar" class="profile-avatar" src="https://ui-avatars.com/api/?name=User" alt="Profile">
         </div>
         <button id="editBtn">Edit</button>
         <label id="profilePhotoLabel" for="avatarInput" class="custom-file-label">Profile Photo</label>
-        <input type="file" id="avatarInput" accept="image/*" style="margin-bottom:12px;display:none;">
+        <input type="file" id="avatarInput" accept="image/*" style="display:none;">
         <button id="saveBtn" style="display:none;">Save</button>
-        <div style="font-size:18px;font-weight:600;margin-bottom:10px;" id="profileUser">User</div>
         <div>
-          <label for="aboutInput" style="color:#667eea;font-weight:500;">About</label>
-          <textarea id="aboutInput" rows="3" style="width:100%;margin-top:6px;margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:15px;" disabled></textarea>
+          <label for="customNameInput">User Name</label>
+          <input type="text" id="customNameInput" placeholder="Enter your display name" disabled>
         </div>
-        <div id="aboutDisplay" style="color:#444;margin-top:18px;"></div>
+        <div id="profileUser"></div>
+        <div>
+          <label for="aboutInput">About</label>
+          <textarea id="aboutInput" rows="3" disabled></textarea>
+        </div>
+        <div id="aboutDisplay"></div>
       </div>
     </div>
   </main>
   <script>
-    // Show logged in user name
+    // Show logged in user name and avatar
     const user = localStorage.getItem('loggedInUser');
-    if (user) {
-      document.getElementById('profileName').textContent = user;
-    }
-    const avatar = localStorage.getItem('profileAvatar');
+    const customName = localStorage.getItem('customName');
+    const avatarImg = document.getElementById('profileAvatar');
     const avatarBarImg = document.getElementById('profileBarAvatar');
+    const profileName = document.getElementById('profileName');
+    const profileUser = document.getElementById('profileUser');
+    const customNameInput = document.getElementById('customNameInput');
+
+    // Set display name
+    if (customName) {
+      profileName.textContent = customName;
+      profileUser.textContent = customName;
+      customNameInput.value = customName;
+    } else if (user) {
+      profileName.textContent = user;
+      profileUser.textContent = user;
+      customNameInput.value = user;
+    } else {
+      profileName.textContent = 'User';
+      profileUser.textContent = 'User';
+      customNameInput.value = 'User';
+    }
+
+    // Set avatar
+    const avatar = localStorage.getItem('profileAvatar');
+    const avatarName = customName || user || 'User';
     if (avatar) {
+      avatarImg.src = avatar;
       avatarBarImg.src = avatar;
     } else {
-      avatarBarImg.src = `https://ui-avatars.com/api/?name=${user || 'User'}`;
+      avatarImg.src = `https://ui-avatars.com/api/?name=${avatarName}`;
+      avatarBarImg.src = `https://ui-avatars.com/api/?name=${avatarName}`;
     }
 
     // Load about info from localStorage
@@ -189,12 +319,25 @@
       avatarInput.style.display = 'block';
       saveBtn.style.display = 'inline-block';
       aboutInput.disabled = false;
+      customNameInput.disabled = false;
       editBtn.style.display = 'none';
       profilePhotoLabel.classList.add('show-label');
     };
 
     // Save button logic
     saveBtn.onclick = function() {
+      // Save custom name
+      const customNameText = customNameInput.value.trim();
+      if (customNameText) {
+        localStorage.setItem('customName', customNameText);
+        profileName.textContent = customNameText;
+        profileUser.textContent = customNameText;
+      } else {
+        localStorage.removeItem('customName');
+        profileName.textContent = user || 'User';
+        profileUser.textContent = user || 'User';
+      }
+
       // Save about info
       const aboutText = aboutInput.value.trim();
       localStorage.setItem('profileAbout', aboutText);
@@ -206,26 +349,36 @@
         reader.onload = function(evt) {
           localStorage.setItem('profileAvatar', evt.target.result);
           avatarImg.src = evt.target.result;
-          avatarBarImg.src = evt.target.result; // update top left avatar
+          avatarBarImg.src = evt.target.result; // Update top left avatar
         };
         reader.readAsDataURL(avatarInput.files[0]);
+      }
+
+      // Update avatar URL if no photo is uploaded
+      if (!avatarInput.files[0]) {
+        const avatarName = customNameText || user || 'User';
+        avatarImg.src = `https://ui-avatars.com/api/?name=${avatarName}`;
+        avatarBarImg.src = `https://ui-avatars.com/api/?name=${avatarName}`;
       }
 
       avatarInput.value = '';
       avatarInput.style.display = 'none';
       saveBtn.style.display = 'none';
       aboutInput.disabled = true;
+      customNameInput.disabled = true;
       editBtn.style.display = 'inline-block';
       profilePhotoLabel.classList.remove('show-label');
     };
-  </script>
-  <script>
-  document.getElementById("logoutBtn").addEventListener("click", function(e) {
-    e.preventDefault();
-    localStorage.removeItem("loggedInUser");
-    window.location.href = "first_page.html";
-  });
-</script>
 
+    // Logout button logic
+    document.getElementById("logoutBtn").addEventListener("click", function(e) {
+      e.preventDefault();
+      localStorage.removeItem("loggedInUser");
+      localStorage.removeItem("customName");
+      localStorage.removeItem("profileAvatar");
+      localStorage.removeItem("profileAbout");
+      window.location.href = "first_page.html";
+    });
+  </script>
 </body>
 </html>
