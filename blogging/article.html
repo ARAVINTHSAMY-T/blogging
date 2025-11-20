@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blog Article</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f6f7fb;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #d6a9e3, #dec6f0);
+      padding: 20px 0;
+      color: white;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      margin: auto;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 600;
+      text-decoration: none;
+      color: white;
+    }
+    .nav-links a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .nav-links a.active {
+      opacity: 0.7;
+      pointer-events: none;
+      cursor: default;
+    }
+    .nav-links a:hover:not(.active) {
+      opacity: 0.8;
+    }
+    .article-container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 36px 32px;
+    }
+    .article-image {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 12px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(102,126,234,0.09);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .article-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .article-category {
+      font-size: 15px;
+      color: #764ba2;
+      margin-bottom: 18px;
+      font-weight: 500;
+      text-align: center;
+    }
+    .article-content {
+      font-size: 17px;
+      color: #444;
+      line-height: 1.7;
+      margin-bottom: 30px;
+      text-align: justify;
+    }
+    .back-btn {
+      display: block;
+      margin: 0 auto;
+      padding: 10px 18px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 15px;
+      transition: 0.3s;
+      text-align: center;
+    }
+    .back-btn:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <script src="./ui-profile.js"></script>
+  <header>
+    <div class="nav">
+      <a class="brand" href="index.html">Aesthetic Blog</a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="post.html" class="active">Posts</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="profile.html">Profile</a>
+        <a href="#" id="logoutBtn">Logout</a>
+      </nav>
+    </div>
+  </header>
+  <div class="article-container" id="articleContainer">
+    <!-- Article will be rendered here -->
+  </div>
+  <script>
+    const blog = JSON.parse(localStorage.getItem('selectedBlog'));
+    const container = document.getElementById('articleContainer');
+    if (!blog) {
+      container.innerHTML = '<p>Blog not found. <a href="post.html">Go back</a></p>';
+    } else {
+      container.innerHTML = `
+        <img class="article-image" src="${blog.image}" alt="${blog.title}">
+        <div class="article-title">${blog.title}</div>
+        <div class="article-category">${blog.category.charAt(0).toUpperCase() + blog.category.slice(1)}</div>
+        <div class="article-content">${blog.content}</div>
+        <a class="back-btn" href="post.html">← Back to Posts</a>
+      `;
+    }
+  </script>
+  <script>
+  document.getElementById("logoutBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "first_page.html";
+  });
+</script>
+</body>
+</html>
