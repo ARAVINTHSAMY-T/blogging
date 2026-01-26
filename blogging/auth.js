@@ -6,6 +6,7 @@ export async function signInWithGoogle() {
   const result = await signInWithPopup(auth, provider);
   const user = result.user;
   const email = (user.email || '').toLowerCase();
+
   const userRef = doc(db, 'users', email);
   const snap = await getDoc(userRef);
   if (!snap.exists()) {
@@ -25,7 +26,9 @@ export async function signInWithGoogle() {
 }
 
 export function watchAuth(callback) {
-  return onAuthStateChanged(auth, callback);
+  return onAuthStateChanged(auth, (user) => {
+    callback(user);
+  });
 }
 
 export async function logout() {

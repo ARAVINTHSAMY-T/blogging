@@ -26,9 +26,14 @@
         <option value="education">Education</option>
         <option value="news">News</option>
         <option value="books">Books</option>
+        <option value="travel">Travel</option>
+        <option value="technology">Technology</option>
+        <option value="festival">Festival</option>
+        <option value="history">History</option>
+        <option value="movies">Movies</option>
       </select>
       <textarea id="content" rows="6" placeholder="Write your content..." required></textarea>
-      <input type="url" id="image" placeholder="Image URL (optional)">
+      <input type="text" id="image" placeholder="Image URL or paste image here (optional)">
       <button type="submit">Publish</button>
       <a href="post.html" style="margin-left:12px;">Back to Posts</a>
     </form>
@@ -55,12 +60,36 @@
       const category = document.getElementById('category').value;
       const content = document.getElementById('content').value.trim();
       const image = document.getElementById('image').value.trim();
+      const author = localStorage.getItem('customName') || localStorage.getItem('loggedInUser') || 'User';
       try {
-        const id = await addPost({ title, category, content, image, authorEmail: currentEmail });
-        document.getElementById('msg').textContent = 'Published!';
+        if (editBlog) {
+          await updatePost(editBlog.id, { title, category, content, image, author });
+          localStorage.removeItem('editBlog');
+          document.getElementById('msg').textContent = 'Updated!';
+        } else {
+          const id = await addPost({ title, category, content, image, authorEmail: currentEmail, author });
+          document.getElementById('msg').textContent = 'Published!';
+        }
         setTimeout(() => { window.location.href = 'post.html'; }, 600);
       } catch (e) {
-        alert('Failed to publish: ' + e.message);
+        alert('Failed: ' + e.message);
+      }
+    });
+
+    // Handle image paste
+    document.getElementById('image').addEventListener('paste', function(e) {
+      const items = e.clipboardData.items;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile();
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            document.getElementById('image').value = event.target.result;
+          };
+          reader.readAsDataURL(file);
+          e.preventDefault(); // Prevent default paste
+          break;
+        }
       }
     });
   </script>

@@ -1,3 +1,7 @@
+// Added: explicit runtime flag and console message indicating this is NOT a Node.js project.
+window.__isNodeProject = false;
+console.info('Environment check: __isNodeProject =', window.__isNodeProject);
+
 // Keeps the profile box (top-left) consistent across pages
 (function () {
   function updateProfile() {

@@ -36,6 +36,39 @@ export async function incrementPostLike(postId, amount = 1) {
   await updateDoc(ref, { likes: increment(amount) });
 }
 
+// New function to handle user-specific likes
+export async function togglePostLike(postId, userEmail) {
+  const userEmailLower = userEmail.toLowerCase();
+  const likeRef = doc(db, 'posts', postId, 'likes', userEmailLower);
+  const likeSnap = await getDoc(likeRef);
+
+  if (likeSnap.exists()) {
+    // User already liked this post, remove the like
+    await updateDoc(doc(db, 'posts', postId), { likes: increment(-1) });
+    // Remove the like document
+    await setDoc(likeRef, { liked: false }, { merge: true });
+    return { liked: false, likes: (await getPost(postId)).likes };
+  } else {
+    // User hasn't liked this post yet, add the like
+    await updateDoc(doc(db, 'posts', postId), { likes: increment(1) });
+    // Create the like document
+    await setDoc(likeRef, {
+      liked: true,
+      likedAt: serverTimestamp(),
+      userEmail: userEmailLower
+    });
+    return { liked: true, likes: (await getPost(postId)).likes };
+  }
+}
+
+// Check if user has liked a post
+export async function hasUserLikedPost(postId, userEmail) {
+  const userEmailLower = userEmail.toLowerCase();
+  const likeRef = doc(db, 'posts', postId, 'likes', userEmailLower);
+  const likeSnap = await getDoc(likeRef);
+  return likeSnap.exists() && likeSnap.data().liked === true;
+}
+
 export async function getPost(postId) {
   const ref = doc(db, 'posts', postId);
   const snap = await getDoc(ref);

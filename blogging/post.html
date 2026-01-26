@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
+      /* Light theme (default) */
       --primary-color: #1d1d1f;
       --secondary-color: #86868b;
       --accent-color: #0071e3;
@@ -20,6 +21,21 @@
       --border-color: #d2d2d7;
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
       --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Dark theme */
+    [data-theme="dark"] {
+      --primary-color: #f5f5f7;
+      --secondary-color: #86868b;
+      --accent-color: #0071e3;
+      --accent-hover: #0077ed;
+      --background: #1d1d1f;
+      --card-bg: #2d2d2f;
+      --text-primary: #f5f5f7;
+      --text-secondary: #a1a1a6;
+      --text-tertiary: #86868b;
+      --border-color: #424245;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     * {
@@ -39,7 +55,7 @@
     }
 
     header {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(254, 254, 254, 0.8);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border-color);
@@ -47,6 +63,10 @@
       position: sticky;
       top: 0;
       z-index: 100;
+    }
+
+    [data-theme="dark"] header {
+      background: rgba(45, 45, 47, 0.8);
     }
 
     .nav {
@@ -128,6 +148,26 @@
       border: 1px solid var(--border-color);
     }
 
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: var(--transition);
+      margin-left: 10px;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      color: var(--text-primary);
+    }
+
     .header {
       display: flex;
       justify-content: flex-end;
@@ -150,7 +190,12 @@
       width: 280px;
       outline: none;
       background: var(--card-bg);
+      color: var(--text-primary);
       transition: var(--transition);
+    }
+
+    .search-bar::placeholder {
+      color: var(--text-secondary);
     }
 
     .search-bar:focus {
@@ -169,6 +214,8 @@
       display: none;
       z-index: 10;
       overflow: hidden;
+      max-height: 200px;
+      overflow-y: auto;
     }
 
     .category-dropdown.active {
@@ -198,6 +245,8 @@
     .category-item i {
       color: var(--accent-color);
     }
+
+
 
     .btn {
       display: inline-block;
@@ -264,6 +313,19 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     }
 
+    /* Dark mode blog card effects */
+    [data-theme="dark"] .blog-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(100, 61, 136, 0.1);
+      background: linear-gradient(135deg, rgba(45, 45, 47, 0.95), rgba(30, 30, 32, 0.95));
+    }
+
+    [data-theme="dark"] .blog-card:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(100, 61, 136, 0.2), 0 0 60px rgba(217, 176, 255, 0.1);
+      border-color: rgba(217, 176, 255, 0.3);
+      transform: translateY(-8px) scale(1.02);
+    }
+
     .blog-image-container {
       position: relative;
       height: 200px;
@@ -288,7 +350,7 @@
       background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      color: white;
+      color: rgb(255, 255, 255);
       padding: 6px 12px;
       border-radius: 20px;
       font-size: 13px;
@@ -491,13 +553,15 @@
         width: 100%;
       }
       
+      .category-dropdown {
+        width: 100%;
+      }
+      
       .search-bar {
         width: 100%;
       }
       
-      .category-dropdown {
-        width: 100%;
-      }
+
       
       .section-title {
         font-size: 28px;
@@ -542,35 +606,20 @@
           <i class="fas fa-sign-out-alt"></i>
         </a>
       </div>
+      <button id="themeToggle" class="theme-toggle" title="Toggle theme">
+        <i class="fas fa-moon"></i>
+      </button>
     </div>
   </header>
 
   <div class="header">
     <div class="search-container">
-      <input class="search-bar" type="text" placeholder="Search category..." id="searchBar" readonly>
+      <input class="search-bar" type="text" placeholder="Search by category..." id="searchBar">
       <div class="category-dropdown" id="categoryDropdown">
-        <div class="category-item" data-category="sports">
-          <i class="fas fa-running"></i> Sports
-        </div>
-        <div class="category-item" data-category="education">
-          <i class="fas fa-graduation-cap"></i> Education
-        </div>
-        <div class="category-item" data-category="news">
-          <i class="fas fa-newspaper"></i> News
-        </div>
-        <div class="category-item" data-category="books">
-          <i class="fas fa-book"></i> Books
-        </div>
-        <div class="category-item" data-category="technology">
-          <i class="fas fa-laptop-code"></i> Technology
-        </div>
-        <div class="category-item" data-category="travel">
-          <i class="fas fa-globe-americas"></i> Travel
-        </div>
       </div>
     </div>
     <a href="add_blog.html" class="btn">
-      <i class="fas fa-plus"></i> Add Blog
+      <i class="fas fa-plus"></i> post
     </a>
   </div>
 
@@ -602,7 +651,8 @@
 
   <script type="module">
     // Import Firebase functions
-    import { getRecentPosts, incrementPostLike } from './db.js';
+    import { getRecentPosts, togglePostLike, hasUserLikedPost } from './db.js';
+    import { watchAuth } from './auth.js';
     
     // DOM elements
     const blogsGrid = document.getElementById('blogsGrid');
@@ -614,13 +664,28 @@
     // Current user and category filter
     let currentUser = localStorage.getItem('loggedInUser') || 'User';
     let currentCategory = null;
+    let currentUserEmail = null;
+    let availableCategories = [];
+    
+    // Watch auth state to get current user email
+    watchAuth(user => {
+      if (user) {
+        currentUserEmail = (user.email || '').toLowerCase();
+      } else {
+        currentUserEmail = null;
+        // Redirect to login if not authenticated
+        window.location.href = 'first_page.html';
+      }
+    });
     
     // Initialize page
     function initPage() {
-      // Set user info
-      profileName.textContent = currentUser;
+      // Set user info - use custom name if available, otherwise use logged-in user
+      const customName = localStorage.getItem('customName');
+      const displayName = customName || currentUser;
+      profileName.textContent = displayName;
       const avatar = localStorage.getItem('profileAvatar');
-      profileBarAvatar.src = avatar || `https://ui-avatars.com/api/?name=${currentUser}&background=0071e3&color=fff`;
+      profileBarAvatar.src = avatar || `https://ui-avatars.com/api/?name=${displayName}&background=0071e3&color=fff`;
       
       // Load blogs
       renderBlogs();
@@ -631,12 +696,15 @@
     
     // Set up event listeners
     function setupEventListeners() {
-      // Show dropdown on search bar focus/click
-      searchBar.addEventListener('focus', () => {
-        categoryDropdown.classList.add('active');
+      // Handle search input
+      searchBar.addEventListener('input', () => {
+        const filter = searchBar.value.trim();
+        renderBlogs(filter || null);
       });
       
-      searchBar.addEventListener('click', () => {
+      // Show dropdown on focus
+      searchBar.addEventListener('focus', () => {
+        populateDropdown();
         categoryDropdown.classList.add('active');
       });
       
@@ -646,33 +714,40 @@
           categoryDropdown.classList.remove('active');
         }
       });
-      
-      // Handle category selection
-      document.querySelectorAll('.category-item').forEach(item => {
-        item.addEventListener('click', function() {
-          const category = this.getAttribute('data-category');
-          searchBar.value = this.textContent.trim();
-          currentCategory = category;
+    }
+    
+    // Populate dropdown with available categories
+    function populateDropdown() {
+      categoryDropdown.innerHTML = '';
+      availableCategories.forEach(cat => {
+        const div = document.createElement('div');
+        div.className = 'category-item';
+        div.innerHTML = `<i class="fas fa-tag"></i> ${cat.charAt(0).toUpperCase() + cat.slice(1)}`;
+        div.addEventListener('click', () => {
+          searchBar.value = cat;
           categoryDropdown.classList.remove('active');
-          renderBlogs(currentCategory);
+          renderBlogs(cat);
         });
+        categoryDropdown.appendChild(div);
       });
     }
     
     // Render blogs in grid layout
-    async function renderBlogs(category = null) {
+    async function renderBlogs(filter = null) {
+      const displayName = localStorage.getItem('customName') || currentUser;
       blogsGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading blogs...</div>';
       
       try {
         const posts = await getRecentPosts(30);
-        const filtered = category ? posts.filter(b => b.category === category) : posts;
+        availableCategories = [...new Set(posts.map(b => b.category).filter(c => c))];
+        const filtered = filter ? posts.filter(b => b.category.toLowerCase().includes(filter.toLowerCase())) : posts;
         
         if (filtered.length === 0) {
           blogsGrid.innerHTML = `
             <div class="empty-state">
               <i class="fas fa-file-alt"></i>
               <h3>No blogs found</h3>
-              <p>${category ? `No blogs found for the "${category}" category.` : 'No blogs available at the moment.'}</p>
+              <p>${filter ? `No blogs found for "${filter}".` : 'No blogs available at the moment.'}</p>
               <a href="add_blog.html" class="btn" style="margin-top: 20px;">Create Post</a>
             </div>
           `;
@@ -695,7 +770,7 @@
               <div class="blog-meta">
                 <div class="blog-user">
                   <img class="blog-user-avatar" src="${profileBarAvatar.src}" alt="User">
-                  <span class="blog-user-name">${blog.author || currentUser}</span>
+                  <span class="blog-user-name">${blog.author || displayName}</span>
                 </div>
                 <div class="blog-actions">
                   <button class="like-btn" data-id="${blog.id}">
@@ -729,14 +804,36 @@
           const likeBtn = blogCard.querySelector('.like-btn');
           likeBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
-            const id = likeBtn.getAttribute('data-id');
-            await incrementPostLike(id, 1);
             
-            // Update UI
+            if (!currentUserEmail) {
+              alert('Please sign in to like posts.');
+              return;
+            }
+            
+            const id = likeBtn.getAttribute('data-id');
             const likeCount = likeBtn.querySelector('.like-count');
-            likeCount.textContent = parseInt(likeCount.textContent) + 1;
-            likeBtn.classList.add('liked');
-            likeBtn.innerHTML = `<i class="fas fa-heart"></i> <span class="like-count">${likeCount.textContent}</span>`;
+            
+            try {
+              // Check if user has already liked this post
+              const hasLiked = await hasUserLikedPost(id, currentUserEmail);
+              
+              if (hasLiked) {
+                // User has liked, so unlike it
+                const result = await togglePostLike(id, currentUserEmail);
+                likeCount.textContent = parseInt(likeCount.textContent) - 1;
+                likeBtn.classList.remove('liked');
+                likeBtn.innerHTML = `<i class="far fa-heart"></i> <span class="like-count">${likeCount.textContent}</span>`;
+              } else {
+                // User hasn't liked, so like it
+                const result = await togglePostLike(id, currentUserEmail);
+                likeCount.textContent = parseInt(likeCount.textContent) + 1;
+                likeBtn.classList.add('liked');
+                likeBtn.innerHTML = `<i class="fas fa-heart"></i> <span class="like-count">${likeCount.textContent}</span>`;
+              }
+            } catch (error) {
+              console.error('Error toggling like:', error);
+              alert('Failed to update like. Please try again.');
+            }
           });
           
           // Add comment button functionality
@@ -780,9 +877,66 @@
     
     // Initialize the page
     initPage();
+
+    // Listen for profile updates from other pages
+    const profileChannel = new BroadcastChannel('profile-updates');
+    profileChannel.onmessage = (event) => {
+      if (event.data.type === 'profile-updated') {
+        // Update profile display with new data
+        const profileName = document.getElementById('profileName');
+        const profileBarAvatar = document.getElementById('profileBarAvatar');
+
+        const customName = event.data.data.customName;
+        const avatar = event.data.data.avatar;
+
+        if (customName && profileName) {
+          profileName.textContent = customName;
+        }
+
+        if (avatar && profileBarAvatar) {
+          profileBarAvatar.src = avatar;
+        } else if (profileBarAvatar) {
+          // Check if there's a saved avatar in localStorage
+          const savedAvatar = localStorage.getItem('profileAvatar');
+          if (savedAvatar) {
+            profileBarAvatar.src = savedAvatar;
+          }
+        }
+      }
+    };
   </script>
-  
+
   <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', currentTheme);
+
+    // Update button icon based on current theme
+    function updateThemeIcon() {
+      const icon = themeToggle.querySelector('i');
+      if (html.getAttribute('data-theme') === 'dark') {
+        icon.className = 'fas fa-sun';
+      } else {
+        icon.className = 'fas fa-moon';
+      }
+    }
+
+    updateThemeIcon();
+
+    // Toggle theme
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon();
+    });
+
     // Logout functionality
     document.getElementById("logoutBtn").addEventListener("click", function(e) {
       e.preventDefault();
