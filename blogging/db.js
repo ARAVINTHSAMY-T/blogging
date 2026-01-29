@@ -75,4 +75,18 @@ export async function getPost(postId) {
   return snap.exists() ? { id: snap.id, ...snap.data() } : null;
 }
 
+export async function updatePost(postId, data) {
+  const ref = doc(db, 'posts', postId);
+  await updateDoc(ref, {
+    title: data.title,
+    category: data.category,
+    content: data.content,
+    image: data.image || '',
+    author: data.author,
+    authorEmail: data.authorEmail.toLowerCase(),
+    updatedAt: serverTimestamp()
+  });
+  return true;
+}
+
 
